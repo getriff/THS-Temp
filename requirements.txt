@@ -1,0 +1,13 @@
+uvicorn
+pydantic
+pymongo
+requests
+fastapi
+aiokafka
+loguru
+pytest
+pytest-cov
+pytest-asyncio
+motor
+pydantic[email]
+python-dotenv
