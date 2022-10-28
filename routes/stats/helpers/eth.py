@@ -1,6 +1,7 @@
 import requests
 import os
 from dotenv import load_dotenv
+from .data import get_func_distribution
 
 load_dotenv()
 
@@ -15,8 +16,13 @@ def get_all_txns(account_address):
     print(url)
 
     response = requests.request("GET", url, headers=headers)
+    func_dist = get_func_distribution(response.json()["result"])
 
-    return {"txns": response.json(), "total_txns": len(response.json()["result"])}
+    return {
+        "txns": response.json()["result"],
+        "total_txns": len(response.json()["result"]),
+        "func_dist": func_dist,
+    }
     # print()
 
 
@@ -43,8 +49,13 @@ def get_all_txns_goe(account_address):
     print(url)
 
     response = requests.request("GET", url, headers=headers)
+    func_dist = get_func_distribution(response.json()["result"])
 
-    return {"txns": response.json(), "total_txns": len(response.json()["result"])}
+    return {
+        "txns": response.json()["result"],
+        "total_txns": len(response.json()["result"]),
+        "func_dist": func_dist,
+    }
     # print()
 
 
