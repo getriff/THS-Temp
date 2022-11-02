@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routes.transactions import router as TransactionRouter
 
 
-app = FastAPI(debug=True)
+app = FastAPI(docs_url="/ths/docs", redoc_url="/ths/redocs", debug=True)
 origins = ["*"]
 
 app.add_middleware(
@@ -16,11 +16,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(TransactionRouter, tags=["transaction"], prefix="/transaction")
+app.include_router(TransactionRouter, tags=["transaction"], prefix="/ths/transaction")
 
 # app.include_router(ProjectRouter, tags=["Project"], prefix="/project")
 
 
-@app.get("/", tags=["Root"])
+@app.get("/ths", tags=["Root"])
 async def read_root():
     return {"message": "Welcome to Transaction Health Service!"}
