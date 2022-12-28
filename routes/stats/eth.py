@@ -18,6 +18,7 @@ def eth_health_check(transaction: THSSchema):
         "total_txns": all_txns["total_txns"],
         "verified": verified["verified"],
         "func_dist": all_txns["func_dist"],
+        "method_dist": all_txns["method_dict"],
         "tag": get_tag(int(verified["verified"]), all_txns["total_txns"]),
     }
 
@@ -26,10 +27,12 @@ def goe_eth_health_check(transaction):
     all_txns = get_all_txns_goe(transaction.contractAddress)
     verified = check_if_verified_goe(transaction.contractAddress)
     print(transaction)
+    print(all_txns)
 
     return {
         "total_txns": all_txns["total_txns"],
         "verified": verified["verified"],
         "func_dist": all_txns["func_dist"],
+        "method_dist": all_txns["method_dict"],
         "tag": get_tag(int(verified["verified"]), all_txns["total_txns"]),
     }

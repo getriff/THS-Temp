@@ -18,6 +18,7 @@ def poly_health_check(transaction: THSSchema):
         "total_txns": all_txns["total_txns"],
         "verified": verified["verified"],
         "func_dist": all_txns["func_dist"],
+        "method_dist": all_txns["method_dict"],
         "tag": get_tag(int(verified["verified"]), all_txns["total_txns"]),
     }
 
@@ -31,5 +32,6 @@ def mum_poly_health_check(transaction):
         "total_txns": all_txns["total_txns"],
         "verified": verified["verified"],
         "func_dist": all_txns["func_dist"],
+        "method_dist": all_txns["method_dict"],
         "tag": get_tag(int(verified["verified"]), all_txns["total_txns"]),
     }

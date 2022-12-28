@@ -16,12 +16,13 @@ def get_all_txns(account_address):
     print(url)
 
     response = requests.request("GET", url, headers=headers)
-    func_dist = get_func_distribution(response.json()["result"])
+    func_dist, method_dict = get_func_distribution(response.json()["result"])
 
     return {
         "txns": response.json()["result"],
         "total_txns": len(response.json()["result"]),
         "func_dist": func_dist,
+        "method_dict": method_dict,
     }
     # print()
 
@@ -49,12 +50,13 @@ def get_all_txns_goe(account_address):
     print(url)
 
     response = requests.request("GET", url, headers=headers)
-    func_dist = get_func_distribution(response.json()["result"])
+    func_dist, method_dict = get_func_distribution(response.json()["result"])
 
     return {
         "txns": response.json()["result"],
         "total_txns": len(response.json()["result"]),
         "func_dist": func_dist,
+        "method_dict": method_dict,
     }
     # print()
 

@@ -1,5 +1,6 @@
 def get_func_distribution(all_txns):
     func_dict = {}
+    methodId_dict = {}
     # print("all txns", all_txns)
     try:
         for i in all_txns:
@@ -7,7 +8,13 @@ def get_func_distribution(all_txns):
                 func_dict[i["functionName"].split("(")[0]] = 1
             else:
                 func_dict[i["functionName"].split("(")[0]] += 1
-        return func_dict
+
+            if i["methodId"] not in methodId_dict.keys():
+                methodId_dict[i["methodId"]] = 1
+            else:
+                methodId_dict[i["methodId"]] += 1
+
+        return func_dict, methodId_dict
     except Exception:
         return "Not available"
 
