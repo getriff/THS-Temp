@@ -1,3 +1,6 @@
+import time
+
+
 def get_func_distribution(all_txns):
     func_dict = {}
     methodId_dict = {}
@@ -15,6 +18,25 @@ def get_func_distribution(all_txns):
                 methodId_dict[i["methodId"]] += 1
 
         return func_dict, methodId_dict
+    except Exception:
+        return "Not available"
+
+
+def get_top_transactor(all_txns):
+    top_transactors = {}
+    try:
+        a = time.time()
+        for i in all_txns:
+            if i["from"] not in top_transactors.keys():
+                top_transactors[i["from"]] = 1
+            else:
+                top_transactors[i["from"]] += 1
+        top_transactors = dict(
+            sorted(top_transactors.items(), key=lambda x: x[1], reverse=True)[:10]
+        )
+        b = time.time()
+        print("time for transactors:", b - a)
+        return top_transactors
     except Exception:
         return "Not available"
 

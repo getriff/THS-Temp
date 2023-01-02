@@ -1,7 +1,7 @@
 import requests
 import os
 from dotenv import load_dotenv
-from .data import get_func_distribution
+from .data import get_func_distribution, get_top_transactor
 
 load_dotenv()
 
@@ -17,12 +17,13 @@ def get_all_txns(account_address):
 
     response = requests.request("GET", url, headers=headers)
     func_dist, method_dict = get_func_distribution(response.json()["result"])
-
+    top_t = get_top_transactor(response.json()["result"])
     return {
         "txns": response.json()["result"],
         "total_txns": len(response.json()["result"]),
         "func_dist": func_dist,
         "method_dict": method_dict,
+        "top_transactor": top_t,
     }
     # print()
 
@@ -51,12 +52,14 @@ def get_all_txns_goe(account_address):
 
     response = requests.request("GET", url, headers=headers)
     func_dist, method_dict = get_func_distribution(response.json()["result"])
+    top_t = get_top_transactor(response.json()["result"])
 
     return {
         "txns": response.json()["result"],
         "total_txns": len(response.json()["result"]),
         "func_dist": func_dist,
         "method_dict": method_dict,
+        "top_transactor": top_t,
     }
     # print()
 
