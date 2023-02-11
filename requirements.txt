@@ -11,3 +11,4 @@ pytest-asyncio
 motor
 pydantic[email]
 python-dotenv
+openai

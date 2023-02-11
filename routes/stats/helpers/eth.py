@@ -38,6 +38,7 @@ def check_if_verified(contract_address):
     response = requests.request("GET", url, headers=headers)
     return {
         "verified": response.json()["status"],
+        "abi": response.json()["result"],
     }
 
 
@@ -74,4 +75,67 @@ def check_if_verified_goe(contract_address):
     response = requests.request("GET", url, headers=headers)
     return {
         "verified": response.json()["status"],
+        "abi": response.json()["result"],
+    }
+
+
+# get abi function for eth mainnet
+def get_abi(contract_address):
+    url = "https://api.etherscan.io/api?module=contract&action=getabi&address={}&apikey={}".format(
+        contract_address, os.getenv("ETHERSCAN_API")
+    )
+    headers = {"Content-Type": "application/json"}
+
+    print(url)
+    response = requests.request("GET", url, headers=headers)
+    return {
+        "verified": response.json()["status"],
+        "abi": response.json()["result"],
+    }
+
+
+# get contract code function for eth mainnet
+def get_contract_code(contract_address):
+    url = "https://api.etherscan.io/api?module=proxy&action=eth_getCode&address={}&tag=latest&apikey={}".format(
+        contract_address, os.getenv("ETHERSCAN_API")
+    )
+    headers = {"Content-Type": "application/json"}
+
+    print(url)
+    response = requests.request("GET", url, headers=headers)
+    return {
+        "verified": response.json()["status"],
+        "contract_name": response.json()["result"][0]["ContractName"],
+        "code": response.json()["result"][0]["SourceCode"],
+    }
+
+
+# get abi function for goerli testnet
+def get_abi_goe(contract_address):
+    url = "https://api-goerli.etherscan.io/api?module=contract&action=getabi&address={}&apikey={}".format(
+        contract_address, os.getenv("ETHERSCAN_API")
+    )
+    headers = {"Content-Type": "application/json"}
+
+    print(url)
+    response = requests.request("GET", url, headers=headers)
+    return {
+        "verified": response.json()["status"],
+        "abi": response.json()["result"],
+    }
+
+
+# get contract code function for goerli testnet
+def get_contract_code_goe(contract_address):
+    url = "https://api-goerli.etherscan.io/api?module=proxy&action=eth_getCode&address={}&tag=latest&apikey={}".format(
+        contract_address, os.getenv("ETHERSCAN_API")
+    )
+    headers = {"Content-Type": "application/json"}
+
+    print(url)
+    response = requests.request("GET", url, headers=headers)
+    return {
+        "verified": response.json()["status"],
+        "contract_name": response.json()["result"][0]["ContractName"],
+        "code": response.json()["result"][0]["SourceCode"],
     }

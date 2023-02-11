@@ -74,3 +74,55 @@ def check_if_verified_mum(contract_address):
     return {
         "verified": response.json()["status"],
     }
+
+
+# testnet polyscan call using requests to fetch abi
+def get_abi_mum(contract_addr):
+    import requests
+
+    url = "https://api-testnet.polygonscan.com/api?module=contract&action=getabi&address={}&apikey={}".format(
+        contract_addr, os.getenv("POLYSCAN_API")
+    )
+    print(url)
+    response = requests.get(url)
+    return {"verified": response.json()["status"], "abi": response.json()["result"]}
+
+
+# testnet polyscan call using requests to fetch contract code
+def get_code_mum(contract_addr):
+    url = "https://api-testnet.polygonscan.com/api?module=contract&action=getsourcecode&address={}&apikey={}".format(
+        contract_addr, os.getenv("POLYSCAN_API")
+    )
+    print(url)
+    response = requests.get(url)
+    return {
+        "verified": response.json()["status"],
+        "contract_name": response.json()["result"][0]["ContractName"],
+        "code": response.json()["result"][0]["SourceCode"],
+    }
+
+
+# get abi function for polygon mainnet
+def get_abi(contract_addr, api_key):
+    import requests
+
+    url = "https://api.polygonscan.com/api?module=contract&action=getabi&address={}&apikey={}".format(
+        contract_addr, api_key
+    )
+    print(url)
+    response = requests.get(url)
+    return {"verified": response.json()["status"], "abi": response.json()["result"]}
+
+
+# get contract code function for polygon mainnet
+def get_code(contract_addr, api_key):
+    url = "https://api.polygonscan.com/api?module=contract&action=getsourcecode&address={}&apikey={}".format(
+        contract_addr, api_key
+    )
+    print(url)
+    response = requests.get(url)
+    return {
+        "verified": response.json()["status"],
+        "contract_name": response.json()["result"][0]["ContractName"],
+        "code": response.json()["result"][0]["SourceCode"],
+    }
