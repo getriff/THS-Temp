@@ -11,6 +11,10 @@ from .helpers.polygon import (
 )
 from .helpers.data import get_tag, extract_function, compile_prompt
 from models.transactions import THSSchema
+from web3 import Web3
+import json
+
+w3 = Web3()
 
 
 def poly_health_check(transaction: THSSchema):
@@ -52,9 +56,20 @@ def polygon_transaction_explainer(transaction):
 
     # TODO: abi decodin txn or checking method id later
 
+    contract = w3.eth.contract(
+        address="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", abi=json.loads(abi["abi"])
+    )
+
     # use transaction method
 
-    if transaction.method == "":
+    if transaction.method == "" and transaction.rawTransaction != "":
+        transaction.method = (
+            str(contract.decode_function_input(transaction.rawTransaction)[0])
+            .split(" ")[1]
+            .split("(")[0]
+            .strip()
+        )
+    elif transaction.method == "":
         return {
             "abi": abi["abi"],
             "code": code["code"],
@@ -91,13 +106,21 @@ def polygon_testnet_transaction_explainer(transaction):
     # get contract code
     code = get_code_mum(transaction.contractAddress)
 
-    # TODO: abi decodin txn or checking method id later
+    # abi decoding raw txn
+    contract = w3.eth.contract(
+        address="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", abi=json.loads(abi["abi"])
+    )
 
     # use transaction method
 
-    # print(transaction.method)
-
-    if transaction.method == "":
+    if transaction.method == "" and transaction.rawTransaction != "":
+        transaction.method = (
+            str(contract.decode_function_input(transaction.rawTransaction)[0])
+            .split(" ")[1]
+            .split("(")[0]
+            .strip()
+        )
+    elif transaction.method == "":
         return {
             "abi": abi["abi"],
             "code": code["code"],

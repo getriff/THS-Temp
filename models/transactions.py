@@ -7,9 +7,7 @@ class THSSchema(BaseModel):
     networkName: str = Field(...)
     contractAddress: str = Field(...)
     method: str = Field(...)
-    methodId: str = Field(...)
     stateMutability: str = Field(...)
-    rawTransaction: str = Field(...)
 
     class Config:
         schema_extra = {
@@ -28,7 +26,9 @@ class THSExplain(BaseModel):
     networkName: str = Field(...)
     contractAddress: str = Field(...)
     method: str = Field(...)
+    methodId: str = Field(...)
     stateMutability: str = Field(...)
+    rawTransaction: str = Field(...)
 
     class Config:
         schema_extra = {
@@ -39,6 +39,6 @@ class THSExplain(BaseModel):
                 "method": "resellToken",
                 "methodId": "0x77ad1892",
                 "stateMutability": "nonpayable",
-                "raxTransaction": "0xf8a0018504a817c80082520894a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48080b84477ad189280000000",
+                "rawTransaction": "0xf8a0018504a817c80082520894a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48080b84477ad189280000000",
             }
         }

@@ -96,7 +96,7 @@ def get_abi(contract_address):
 
 # get contract code function for eth mainnet
 def get_contract_code(contract_address):
-    url = "https://api.etherscan.io/api?module=proxy&action=eth_getCode&address={}&tag=latest&apikey={}".format(
+    url = "https://api.etherscan.io/api?module=contract&action=getsourcecode&address={}&apikey={}".format(
         contract_address, os.getenv("ETHERSCAN_API")
     )
     headers = {"Content-Type": "application/json"}
@@ -127,13 +127,15 @@ def get_abi_goe(contract_address):
 
 # get contract code function for goerli testnet
 def get_contract_code_goe(contract_address):
-    url = "https://api-goerli.etherscan.io/api?module=proxy&action=eth_getCode&address={}&tag=latest&apikey={}".format(
+    url = "https://api-goerli.etherscan.io/api?module=contract&action=getsourcecode&address={}&apikey={}".format(
         contract_address, os.getenv("ETHERSCAN_API")
     )
     headers = {"Content-Type": "application/json"}
 
     print(url)
     response = requests.request("GET", url, headers=headers)
+    # print(response)
+    # print(response.json())
     return {
         "verified": response.json()["status"],
         "contract_name": response.json()["result"][0]["ContractName"],

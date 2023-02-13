@@ -11,6 +11,10 @@ from .helpers.eth import (
 )
 from .helpers.data import get_tag, extract_function, compile_prompt
 from models.transactions import THSSchema
+from web3 import Web3
+import json
+
+w3 = Web3()
 
 
 def eth_health_check(transaction: THSSchema):
@@ -31,8 +35,8 @@ def eth_health_check(transaction: THSSchema):
 def goe_eth_health_check(transaction):
     all_txns = get_all_txns_goe(transaction.contractAddress)
     verified = check_if_verified_goe(transaction.contractAddress)
-    print(transaction)
-    print(all_txns)
+    # print(transaction)
+    # print(all_txns)
 
     return {
         "total_txns": all_txns["total_txns"],
@@ -55,7 +59,20 @@ def eth_transaction_explainer(transaction):
 
     # use transaction method
 
-    if transaction.method == "":
+    contract = w3.eth.contract(
+        address="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", abi=json.loads(abi["abi"])
+    )
+
+    # use transaction method
+
+    if transaction.method == "" and transaction.rawTransaction != "":
+        transaction.method = (
+            str(contract.decode_function_input(transaction.rawTransaction)[0])
+            .split(" ")[1]
+            .split("(")[0]
+            .strip()
+        )
+    elif transaction.method == "":
         return {
             "abi": abi["abi"],
             "code": code["code"],
@@ -63,6 +80,7 @@ def eth_transaction_explainer(transaction):
             "prompt": "",
         }
 
+    print("Here: ", transaction.method)
     try:
         function_code = extract_function(code["code"], transaction.method)
 
@@ -96,17 +114,33 @@ def goe_eth_transaction_explainer(transaction):
 
     # use transaction method
 
-    if transaction.method == "":
+    contract = w3.eth.contract(
+        address="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", abi=json.loads(abi["abi"])
+    )
+
+    # use transaction method
+
+    if transaction.method == "" and transaction.rawTransaction != "":
+        transaction.method = (
+            str(contract.decode_function_input(transaction.rawTransaction)[0])
+            .split(" ")[1]
+            .split("(")[0]
+            .strip()
+        )
+
+    elif transaction.method == "":
         return {
             "abi": abi["abi"],
             "code": code["code"],
             "function_code": "",
             "prompt": "",
         }
-
+    print("Here:", transaction.method.strip())
+    print("Here:", "Hello")
     try:
+        # print(code["code"])
         function_code = extract_function(code["code"], transaction.method)
-
+        print(function_code)
     except Exception as e:
         return {
             "abi": "",

@@ -66,6 +66,7 @@ def extract_function(data, function_name):
     counter = 0
     while True:
         start_index = data.find(f"function {function_name}(", start_index)
+        print(start_index)
         if start_index == -1:
             break
 
@@ -87,6 +88,7 @@ def extract_function(data, function_name):
         ret_dict[counter] = function_code
 
         start_index = end_index
+        data = data[start_index:]
 
     return ret_dict[list(ret_dict.keys())[-1]]
 

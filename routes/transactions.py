@@ -54,7 +54,7 @@ async def get_tx_health(transaction: THSSchema = Body(...)):
 
 
 @router.post(
-    "/explain",
+    "/explain/",
     response_description="Gives an explaination of what the transaction does at the blockchain level",
 )
 async def get_tx_explain(transaction: THSExplain = Body(...)):
