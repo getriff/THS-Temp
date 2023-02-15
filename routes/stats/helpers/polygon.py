@@ -95,10 +95,27 @@ def get_code_mum(contract_addr):
     )
     print(url)
     response = requests.get(url)
+    if response.json()["result"][0]["Proxy"] == "1":
+        url = "https://api-testnet.polygonscan.com/api?module=contract&action=getsourcecode&address={}&apikey={}".format(
+            response.json()["result"][0]["Implementation"], os.getenv("ETHERSCAN_API")
+        )
+        response2 = requests.get(url)
+        abiRet = get_abi_mum(response.json()["result"][0]["Implementation"])
+        print(abiRet)
+        return {
+            "verified": abiRet["verified"],
+            "contract_name": response2.json()["result"][0]["ContractName"],
+            "code": response2.json()["result"][0]["SourceCode"],
+            "abi": abiRet["abi"],
+        }
+
+    abiRet = get_abi_mum(contract_addr)
+    print(abiRet)
     return {
-        "verified": response.json()["status"],
+        "verified": abiRet["verified"],
         "contract_name": response.json()["result"][0]["ContractName"],
         "code": response.json()["result"][0]["SourceCode"],
+        "abi": abiRet["abi"],
     }
 
 
@@ -121,8 +138,24 @@ def get_code(contract_addr, api_key):
     )
     print(url)
     response = requests.get(url)
+    if response.json()["result"][0]["Proxy"] == "1":
+        url = "https://api.polygonscan.com/api?module=contract&action=getsourcecode&address={}&apikey={}".format(
+            response.json()["result"][0]["Implementation"], os.getenv("ETHERSCAN_API")
+        )
+        response2 = requests.get(url)
+        abiRet = get_abi(response.json()["result"][0]["Implementation"])
+        print(abiRet)
+        return {
+            "verified": abiRet["verified"],
+            "contract_name": response2.json()["result"][0]["ContractName"],
+            "code": response2.json()["result"][0]["SourceCode"],
+            "abi": abiRet["abi"],
+        }
+
+    abiRet = get_abi(contract_addr)
     return {
-        "verified": response.json()["status"],
+        "verified": abiRet["verified"],
         "contract_name": response.json()["result"][0]["ContractName"],
         "code": response.json()["result"][0]["SourceCode"],
+        "abi": abiRet["abi"],
     }

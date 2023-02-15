@@ -49,15 +49,20 @@ def mum_poly_health_check(transaction):
 
 # polygon transaction explainer
 def polygon_transaction_explainer(transaction):
-    # get abi
-    abi = get_abi(transaction.contractAddress)
     # get contract code
     code = get_code(transaction.contractAddress)
 
-    # TODO: abi decodin txn or checking method id later
+    if not code["verified"]:
+        return {
+            "abi": "",
+            "code": "",
+            "function_code": "",
+            "prompt": "",
+        }
 
     contract = w3.eth.contract(
-        address="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", abi=json.loads(abi["abi"])
+        address="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        abi=json.loads(code["abi"]),
     )
 
     # use transaction method
@@ -71,7 +76,7 @@ def polygon_transaction_explainer(transaction):
         )
     elif transaction.method == "":
         return {
-            "abi": abi["abi"],
+            "abi": code["abi"],
             "code": code["code"],
             "function_code": "",
             "prompt": "",
@@ -91,7 +96,7 @@ def polygon_transaction_explainer(transaction):
     prompt = compile_prompt(function_code)
 
     return {
-        "abi": abi["abi"],
+        "abi": code["abi"],
         "code": code["code"],
         "function_code": function_code,
         "prompt": prompt,
@@ -100,15 +105,22 @@ def polygon_transaction_explainer(transaction):
 
 # polygon testnet transaction explainer
 def polygon_testnet_transaction_explainer(transaction):
-    # get abi
-    abi = get_abi_mum(transaction.contractAddress)
 
     # get contract code
     code = get_code_mum(transaction.contractAddress)
 
+    if not code["verified"]:
+        return {
+            "abi": "",
+            "code": "",
+            "function_code": "",
+            "prompt": "",
+        }
+
     # abi decoding raw txn
     contract = w3.eth.contract(
-        address="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", abi=json.loads(abi["abi"])
+        address="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        abi=json.loads(code["abi"]),
     )
 
     # use transaction method
@@ -122,7 +134,7 @@ def polygon_testnet_transaction_explainer(transaction):
         )
     elif transaction.method == "":
         return {
-            "abi": abi["abi"],
+            "abi": code["abi"],
             "code": code["code"],
             "function_code": "",
             "prompt": "",
@@ -144,7 +156,7 @@ def polygon_testnet_transaction_explainer(transaction):
     prompt = compile_prompt(function_code)
 
     return {
-        "abi": abi["abi"],
+        "abi": code["abi"],
         "code": code["code"],
         "function_code": function_code,
         "prompt": prompt,

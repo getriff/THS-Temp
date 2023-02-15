@@ -65,85 +65,116 @@ async def get_tx_explain(transaction: THSExplain = Body(...)):
         - If its verified and Source code is available, decode Txn
         - Create a prompt and call the open ai api
         - Extract explaination from the response and return it
+
     """
-    if transaction.networkId == 1:
-        explainer_meta = eth_transaction_explainer(transaction)
-        # print(explainer_meta)
-        if explainer_meta["prompt"] == "":
-            return ErrorResponseModel(
-                "Method not found",
-                404,
-                "method {} not found".format(transaction.method),
+    try:
+        if transaction.networkId == 1:
+            explainer_meta = eth_transaction_explainer(transaction)
+            # print(explainer_meta)
+            if explainer_meta["prompt"] == "":
+                return ErrorResponseModel(
+                    "Method not found",
+                    404,
+                    "method {} not found".format(transaction.method),
+                )
+
+            # send only 4096 tokens max in request to open ai
+            if len(explainer_meta["prompt"].split(" ")) > 4096:
+                explainer_meta["prompt"] = (
+                    explainer_meta["prompt"].split(" ").slice(0, 4096).join(" ")
+                )
+
+            response = openai.Edit.create(
+                model="code-davinci-edit-001",
+                input=explainer_meta["prompt"],
+                instruction="Replace [insert] with correct answer to the question",
+                temperature=0,
+                top_p=1,
             )
-        response = openai.Edit.create(
-            model="code-davinci-edit-001",
-            input=explainer_meta["prompt"],
-            instruction="Replace [insert] with correct answer to the question",
-            temperature=0,
-            top_p=1,
-        )
-        response = response.choices[0].text.split("\n \n A.")[1]
+            response = response.choices[0].text.split("\n \n A.")[1]
 
-    elif transaction.networkId == 5:
-        explainer_meta = goe_eth_transaction_explainer(transaction)
-        # print(explainer_meta)
-        if explainer_meta["prompt"] == "":
-            return ErrorResponseModel(
-                "Method not found",
-                404,
-                "method {} not found".format(transaction.method),
+        elif transaction.networkId == 5:
+            explainer_meta = goe_eth_transaction_explainer(transaction)
+            # print(explainer_meta)
+            if explainer_meta["prompt"] == "":
+                return ErrorResponseModel(
+                    "Method not found",
+                    404,
+                    "method {} not found".format(transaction.method),
+                )
+            # send only 4096 tokens max in request to open ai
+            if len(explainer_meta["prompt"].split(" ")) > 4096:
+                explainer_meta["prompt"] = (
+                    explainer_meta["prompt"].split(" ").slice(0, 4096).join(" ")
+                )
+
+            response = openai.Edit.create(
+                model="code-davinci-edit-001",
+                input=explainer_meta["prompt"],
+                instruction="Replace [insert] with correct answer to the question",
+                temperature=0,
+                top_p=1,
             )
-        response = openai.Edit.create(
-            model="code-davinci-edit-001",
-            input=explainer_meta["prompt"],
-            instruction="Replace [insert] with correct answer to the question",
-            temperature=0,
-            top_p=1,
-        )
-        response = response.choices[0].text.split("\n \n A.")[1]
-    elif transaction.networkId == 137:
-        explainer_meta = polygon_transaction_explainer(transaction)
-        # print(explainer_meta)
-        if explainer_meta["prompt"] == "":
-            return ErrorResponseModel(
-                "Method not found",
-                404,
-                "method {} not found".format(transaction.method),
+            response = response.choices[0].text.split("\n \n A.")[1]
+        elif transaction.networkId == 137:
+            explainer_meta = polygon_transaction_explainer(transaction)
+            # print(explainer_meta)
+
+            if explainer_meta["prompt"] == "":
+                return ErrorResponseModel(
+                    "Method not found",
+                    404,
+                    "method {} not found".format(transaction.method),
+                )
+            # send only 4096 tokens max in request to open ai
+            if len(explainer_meta["prompt"].split(" ")) > 4096:
+                explainer_meta["prompt"] = (
+                    explainer_meta["prompt"].split(" ").slice(0, 4096).join(" ")
+                )
+
+            response = openai.Edit.create(
+                model="code-davinci-edit-001",
+                input=explainer_meta["prompt"],
+                instruction="Replace [insert] with correct answer to the question",
+                temperature=0,
+                top_p=1,
             )
+            response = response.choices[0].text.split("\n \n A.")[1]
+        elif transaction.networkId == 80001:
+            explainer_meta = polygon_testnet_transaction_explainer(transaction)
 
-        response = openai.Edit.create(
-            model="code-davinci-edit-001",
-            input=explainer_meta["prompt"],
-            instruction="Replace [insert] with correct answer to the question",
-            temperature=0,
-            top_p=1,
-        )
-        response = response.choices[0].text.split("\n \n A.")[1]
-    elif transaction.networkId == 80001:
-        explainer_meta = polygon_testnet_transaction_explainer(transaction)
+            # print(explainer_meta)
+            if explainer_meta["prompt"] == "":
+                return ErrorResponseModel(
+                    "Method not found",
+                    404,
+                    "method {} not found".format(transaction.method),
+                )
+            # send only 4096 tokens max in request to open ai
+            if len(explainer_meta["prompt"].split(" ")) > 4096:
+                explainer_meta["prompt"] = (
+                    explainer_meta["prompt"].split(" ").slice(0, 4096).join(" ")
+                )
 
-        # print(explainer_meta)
-        if explainer_meta["prompt"] == "":
-            return ErrorResponseModel(
-                "Method not found",
-                404,
-                "method {} not found".format(transaction.method),
+            response = openai.Edit.create(
+                model="code-davinci-edit-001",
+                input=explainer_meta["prompt"],
+                instruction="Replace [insert] with correct answer to the question",
+                temperature=0,
+                top_p=1,
             )
+            # print(response.choices[0].text)
 
-        response = openai.Edit.create(
-            model="code-davinci-edit-001",
-            input=explainer_meta["prompt"],
-            instruction="Replace [insert] with correct answer to the question",
-            temperature=0,
-            top_p=1,
-        )
-        # print(response.choices[0].text)
-
-        response = response.choices[0].text.split("\n \n A.")[1]
-    else:
+            response = response.choices[0].text.split("\n \n A.")[1]
+        else:
+            return ErrorResponseModel(
+                "Network not implemented",
+                404,
+                "Network ID {} has not been implemented".format(transaction.networkId),
+            )
+    except Exception as e:
+        print(e)
         return ErrorResponseModel(
-            "Network not implemented",
-            404,
-            "Network ID {} has not been implemented".format(transaction.networkId),
+            code=500, error="Something went wrong", message=str(e)
         )
     return ResponseModel(response, "Transaction Explaination")

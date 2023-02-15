@@ -50,17 +50,23 @@ def goe_eth_health_check(transaction):
 
 # eth transaction explainer
 def eth_transaction_explainer(transaction):
-    # get abi
-    abi = get_abi(transaction.contractAddress)
+
     # get contract code
     code = get_contract_code(transaction.contractAddress)
 
-    # TODO: abi decodin txn or checking method id later
+    if not code["verified"]:
+        return {
+            "abi": "",
+            "code": "",
+            "function_code": "",
+            "prompt": "",
+        }
 
     # use transaction method
 
     contract = w3.eth.contract(
-        address="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", abi=json.loads(abi["abi"])
+        address="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        abi=json.loads(code["abi"]),
     )
 
     # use transaction method
@@ -74,7 +80,7 @@ def eth_transaction_explainer(transaction):
         )
     elif transaction.method == "":
         return {
-            "abi": abi["abi"],
+            "abi": code["abi"],
             "code": code["code"],
             "function_code": "",
             "prompt": "",
@@ -96,7 +102,7 @@ def eth_transaction_explainer(transaction):
     prompt = compile_prompt(function_code)
 
     return {
-        "abi": abi["abi"],
+        "abi": code["abi"],
         "code": code["code"],
         "function_code": function_code,
         "prompt": prompt,
@@ -105,17 +111,24 @@ def eth_transaction_explainer(transaction):
 
 # goe eth transaction explainer
 def goe_eth_transaction_explainer(transaction):
-    # get abi
-    abi = get_abi_goe(transaction.contractAddress)
     # get contract code
     code = get_contract_code_goe(transaction.contractAddress)
 
-    # TODO: abi decodin txn or checking method id later
+    if not code["verified"]:
+        return {
+            "abi": "",
+            "code": "",
+            "function_code": "",
+            "prompt": "",
+        }
 
     # use transaction method
 
+    print(code["abi"])
+
     contract = w3.eth.contract(
-        address="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", abi=json.loads(abi["abi"])
+        address="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        abi=json.loads(code["abi"]),
     )
 
     # use transaction method
@@ -130,7 +143,7 @@ def goe_eth_transaction_explainer(transaction):
 
     elif transaction.method == "":
         return {
-            "abi": abi["abi"],
+            "abi": code["abi"],
             "code": code["code"],
             "function_code": "",
             "prompt": "",
@@ -153,7 +166,7 @@ def goe_eth_transaction_explainer(transaction):
     prompt = compile_prompt(function_code)
 
     return {
-        "abi": abi["abi"],
+        "abi": code["abi"],
         "code": code["code"],
         "function_code": function_code,
         "prompt": prompt,

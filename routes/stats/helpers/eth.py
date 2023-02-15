@@ -103,10 +103,26 @@ def get_contract_code(contract_address):
 
     print(url)
     response = requests.request("GET", url, headers=headers)
+    if response.json()["result"][0]["Proxy"] == "1":
+        url = "https://api.etherscan.io/api?module=contract&action=getsourcecode&address={}&apikey={}".format(
+            response.json()["result"][0]["Implementation"], os.getenv("ETHERSCAN_API")
+        )
+        response2 = requests.request("GET", url, headers=headers)
+        abiRet = get_abi(response.json()["result"][0]["Implementation"])
+        print(abiRet)
+        return {
+            "verified": abiRet["verified"],
+            "contract_name": response2.json()["result"][0]["ContractName"],
+            "code": response2.json()["result"][0]["SourceCode"],
+            "abi": abiRet["abi"],
+        }
+
+    abiRet = get_abi(contract_address)
     return {
-        "verified": response.json()["status"],
+        "verified": abiRet["verified"],
         "contract_name": response.json()["result"][0]["ContractName"],
         "code": response.json()["result"][0]["SourceCode"],
+        "abi": abiRet["abi"],
     }
 
 
@@ -134,10 +150,25 @@ def get_contract_code_goe(contract_address):
 
     print(url)
     response = requests.request("GET", url, headers=headers)
-    # print(response)
-    # print(response.json())
+
+    if response.json()["result"][0]["Proxy"] == "1":
+        url = "https://api-goerli.etherscan.io/api?module=contract&action=getsourcecode&address={}&apikey={}".format(
+            response.json()["result"][0]["Implementation"], os.getenv("ETHERSCAN_API")
+        )
+        response2 = requests.request("GET", url, headers=headers)
+        abiRet = get_abi_goe(response.json()["result"][0]["Implementation"])
+        print(abiRet)
+        return {
+            "verified": abiRet["verified"],
+            "contract_name": response2.json()["result"][0]["ContractName"],
+            "code": response2.json()["result"][0]["SourceCode"],
+            "abi": abiRet["abi"],
+        }
+
+    abiRet = get_abi_goe(contract_address)
     return {
-        "verified": response.json()["status"],
+        "verified": abiRet["verified"],
         "contract_name": response.json()["result"][0]["ContractName"],
         "code": response.json()["result"][0]["SourceCode"],
+        "abi": abiRet["abi"],
     }
