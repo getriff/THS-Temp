@@ -4,6 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from models.api import ResponseModel, ErrorResponseModel
 from models.transactions import THSSchema, THSExplain
 import openai
+import os
 
 from .stats.eth import (
     eth_health_check,
@@ -20,7 +21,9 @@ from .stats.polygon import (
 
 router = APIRouter()
 
-openai.api_key = "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"
+
+# Load from env
+openai.api_key = os.getenv("OPENAI_API")
 
 
 @router.post(
