@@ -12,7 +12,11 @@ def get_all_txns(account_address):
         account_address, os.getenv("POLYSCAN_API")
     )
     # &page=1&offset=10
-    headers = {"Content-Type": "application/json"}
+    headers = {
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, "
+        "like Gecko) Chrome/50.0.2661.102 Safari/537.36",
+    }
     print(url)
     response = requests.request("GET", url, headers=headers)
     # print("response", response)
@@ -32,7 +36,11 @@ def check_if_verified(contract_address):
     url = "https://api.polygonscan.com/api?module=contract&action=getabi&address={}&apikey={}".format(
         contract_address, os.getenv("POLYSCAN_API")
     )
-    headers = {"Content-Type": "application/json"}
+    headers = {
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, "
+        "like Gecko) Chrome/50.0.2661.102 Safari/537.36",
+    }
 
     print(url)
     response = requests.request("GET", url, headers=headers)
@@ -46,7 +54,11 @@ def get_all_txns_mum(account_address):
         account_address, os.getenv("POLYSCAN_API")
     )
     # &page=1&offset=10
-    headers = {"Content-Type": "application/json"}
+    headers = {
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, "
+        "like Gecko) Chrome/50.0.2661.102 Safari/537.36",
+    }
 
     print(url)
 
@@ -67,7 +79,11 @@ def check_if_verified_mum(contract_address):
     url = "https://api-testnet.polygonscan.com/api?module=contract&action=getabi&address={}&apikey={}".format(
         contract_address, os.getenv("POLYSCAN_API")
     )
-    headers = {"Content-Type": "application/json"}
+    headers = {
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, "
+        "like Gecko) Chrome/50.0.2661.102 Safari/537.36",
+    }
 
     print(url)
     response = requests.request("GET", url, headers=headers)
